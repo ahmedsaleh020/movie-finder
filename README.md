@@ -16,7 +16,6 @@ This is a simple movie search application that allows you to search for movies b
 ### How to Use:
 
 * Clone this repository.
-* Install any dependencies (if required).
 * Open the index.html file in your web browser.
 * Enter a movie title in the search bar and click the "Search" button.
 * Movie details will be displayed below the search bar if the movie is found.
