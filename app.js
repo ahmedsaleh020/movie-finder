@@ -1,12 +1,12 @@
 let input = document.querySelector("input");
 let searchBtn = document.querySelector(".search-btn");
 let DownloadBtn = document.querySelector(".download-btn");
+let subtitles = document.querySelector(".subtitles");
 let container = document.querySelector(".container");
 let loader = document.querySelector(".loader");
 let detailsCard = document.querySelector(".more-details");
 let downloadLinks = document.querySelector(".download-links");
 let downloadCards = document.querySelector(".download-cards");
-
 let closeBtn = document.querySelector(".close");
 let movieCard, movId;
 let movieTitle =
@@ -16,7 +16,6 @@ let movieTitle =
   movieName =
   url =
     undefined);
-
 // search btn
 searchBtn.addEventListener("click", function () {
   if (input.value == "") {
@@ -27,7 +26,6 @@ searchBtn.addEventListener("click", function () {
     fetchMovieDetails();
   }
 });
-
 // download links btn
 let downloadBtn = document.querySelector(".download-btn");
 downloadBtn.addEventListener("click", function () {
@@ -52,15 +50,19 @@ downloadBtn.addEventListener("click", function () {
         let message = `<div class='download-links-err-msg'>No Download Links Available For This Movie Now</div>`;
         downloadCards.insertAdjacentHTML("beforeend", message);
       }
+    })
+    .catch((error) => {
+      loader.style.display = "none";
+      alert(`Error .. Check Internet and Try Again`);
+      downloadBtn.style.display = "none";
+      subtitles.style.display = "none";
+      if (movieCard) movieCard.style.display = "none";
     });
-
   // hide the links page
-
   closeBtn.addEventListener("click", function () {
     downloadLinks.style.scale = "0";
   });
 });
-
 function fetchMovieDetails() {
   loader.style.display = "inline-block";
   input.value = "";
@@ -95,17 +97,22 @@ function fetchMovieDetails() {
       } else if (data["Response"] == "False") {
         if (movieCard && movieCard.style) movieCard.style.display = "none";
         alert(`${data["Error"]}`);
+        downloadBtn.style.display = "none";
+        subtitles.style.display = "none";
       }
     })
     .catch((error) => {
       loader.style.display = "none";
       alert(`Error .. Try Again`);
       if (movieCard) movieCard.style.display = "none";
+      downloadBtn.style.display = "none";
+      subtitles.style.display = "none";
     });
 }
-
 function displayMovieDetails() {
   downloadBtn.style.display = "grid";
+  subtitles.style.display = "grid";
+  subtitles.href = `https://yifysubtitles.ch/movie-imdb/${movId}`;
   container.innerHTML = "";
   const card = `<div class="movie-card flex">
 <img src=${moviePoster} />
@@ -120,7 +127,6 @@ function displayMovieDetails() {
   </div>`;
   container.insertAdjacentHTML("afterbegin", card);
   movieCard = document.querySelector(".movie-card");
-
   // show more btn
   let showMore = document.querySelector(".show-more");
   showMore.addEventListener("click", function () {
@@ -145,7 +151,6 @@ function displayMovieDetails() {
     <span>Languages</span>
     <p>${Language}</p>
     <a href="#" class='show-less'>Show Less</a>`;
-
     detailsCard.insertAdjacentHTML("afterbegin", details);
     detailsCard.style.transform = "scale(1)";
     // show less btn
