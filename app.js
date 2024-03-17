@@ -1,10 +1,14 @@
 let input = document.querySelector("input");
-let btn = document.querySelector("button");
-let selectType = document.querySelector("select");
+let searchBtn = document.querySelector(".search-btn");
+let DownloadBtn = document.querySelector(".download-btn");
 let container = document.querySelector(".container");
 let loader = document.querySelector(".loader");
 let detailsCard = document.querySelector(".more-details");
-let movieCard;
+let downloadLinks = document.querySelector(".download-links");
+let downloadCards = document.querySelector(".download-cards");
+
+let closeBtn = document.querySelector(".close");
+let movieCard, movId;
 let movieTitle =
   (movieGenre =
   moviePoster =
@@ -13,17 +17,51 @@ let movieTitle =
   url =
     undefined);
 
-btn.addEventListener("click", function () {
+// search btn
+searchBtn.addEventListener("click", function () {
   if (input.value == "") {
     alert("Enter a Movie name");
   } else {
     movieName = input.value;
-    url = `https://www.omdbapi.com/?apikey=6f111c03&t=${movieName}`;
-    fetchData();
+    url = `https://www.omdbapi.com/?apikey=6f111c03&t=${movieName}&type=movie&plot=full`;
+    fetchMovieDetails();
   }
 });
 
-function fetchData() {
+// download links btn
+let downloadBtn = document.querySelector(".download-btn");
+downloadBtn.addEventListener("click", function () {
+  fetch(`https://yts.mx/api/v2/movie_details.json?imdb_id=${movId}`)
+    .then((res) => res.json())
+    .then((dat) => {
+      let links = dat.data.movie.torrents;
+      // display the links page
+      downloadLinks.style.scale = "1";
+      if (links) {
+        downloadCards.innerHTML = "";
+        for (const { size, quality, url } of links) {
+          let downloadCard = `<div class="download-card flex">
+          <span>Quality : ${quality}</span>
+          <span>Size : ${size}</span>
+          <a href="${url}">Download</a>
+        </div>`;
+          downloadCards.insertAdjacentHTML("beforeend", downloadCard);
+        }
+      } else {
+        downloadCards.innerHTML = "";
+        let message = `<div class='download-links-err-msg'>No Download Links Available For This Movie Now</div>`;
+        downloadCards.insertAdjacentHTML("beforeend", message);
+      }
+    });
+
+  // hide the links page
+
+  closeBtn.addEventListener("click", function () {
+    downloadLinks.style.scale = "0";
+  });
+});
+
+function fetchMovieDetails() {
   loader.style.display = "inline-block";
   input.value = "";
   fetch(url)
@@ -38,6 +76,7 @@ function fetchData() {
           imdbRating: movieRating,
           Genre: movieGenre,
           Type,
+          Runtime,
           Plot,
           Year,
           Actors,
@@ -45,12 +84,14 @@ function fetchData() {
           Country,
           Rated,
           Language,
+          imdbID,
         } = data);
+        movId = imdbID;
         // in case of movie poster is not exist .. display default poster
         if (moviePoster == "N/A") {
           moviePoster = "./default.jpeg";
         }
-        displayData();
+        displayMovieDetails();
       } else if (data["Response"] == "False") {
         if (movieCard && movieCard.style) movieCard.style.display = "none";
         alert(`${data["Error"]}`);
@@ -62,7 +103,9 @@ function fetchData() {
       if (movieCard) movieCard.style.display = "none";
     });
 }
-function displayData() {
+
+function displayMovieDetails() {
+  downloadBtn.style.display = "grid";
   container.innerHTML = "";
   const card = `<div class="movie-card flex">
 <img src=${moviePoster} />
@@ -76,8 +119,9 @@ function displayData() {
   </div>
   </div>`;
   container.insertAdjacentHTML("afterbegin", card);
-
   movieCard = document.querySelector(".movie-card");
+
+  // show more btn
   let showMore = document.querySelector(".show-more");
   showMore.addEventListener("click", function () {
     detailsCard.innerHTML = "";
@@ -92,8 +136,8 @@ function displayData() {
     <p>${Awards}</p>
     <span>Rated</span>
     <p>${Rated}</p>
-    <span>Type</span>
-    <p>${Type}</p>
+    <span>Duration</span>
+    <p>${Runtime}</p>
     <span>Year</span>
     <p>${Year}</p>
     <span>Country</span>
@@ -104,6 +148,7 @@ function displayData() {
 
     detailsCard.insertAdjacentHTML("afterbegin", details);
     detailsCard.style.transform = "scale(1)";
+    // show less btn
     let showLess = document.querySelector(".show-less");
     showLess.addEventListener("click", function () {
       detailsCard.style.transform = "scale(0)";
