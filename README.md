@@ -11,8 +11,8 @@ This is a simple movie search application that allows you to search for movies b
 
 * Search for movies by title using the search bar.
 * View movie details including poster, title, rating, genre, plot, actors, awards, and more.
-* Display a loading indicator while fetching data.
-* Show a "Movie Not Found" message if the search doesn't return any results.
+* Provide Download Links for each movie with various qualities.
+
 ### How to Use:
 
 * Clone this repository.
@@ -25,9 +25,13 @@ This is a simple movie search application that allows you to search for movies b
 
 * HTML
 * CSS
-* JavaScript (Fetch API)
-
+* JavaScript (potentially using external libraries like OMDb API, YTS API)
+* Netlify (for deployment)
 
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Disclaimer:
+
+The OMDb API might have usage limitations or terms of service. It's recommended to check their [documentation](https://www.omdbapi.com/) for details.
