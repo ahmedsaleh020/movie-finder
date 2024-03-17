@@ -12,6 +12,7 @@ This is a simple movie search application that allows you to search for movies b
 * Search for movies by title using the search bar.
 * View movie details including poster, title, rating, genre, plot, actors, awards, and more.
 * Provide Download Links for each movie with various qualities.
+* Provide Subtitle Files for each movie with various Languages.
 
 ### How to Use:
 
