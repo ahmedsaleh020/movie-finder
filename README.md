@@ -2,11 +2,6 @@
 
 This is a simple movie search application that allows you to search for movies by title and view details like genre, rating, plot, and cast.
 
-## Live Demo:
-
-[Movie Finder](https://movie-finder-pro.netlify.app/)
-
-
 ## Features:
 
 * Search for movies by title using the search bar.
